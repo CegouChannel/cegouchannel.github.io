@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Предсказания Императрицы</title>
+</head>
+<body>
+    <pre id="output">Загрузка...</pre>
+
+    <script>
+        // Загружаем предсказания из файла predictions.txt
+        fetch('./predictions.txt')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Не удалось загрузить predictions.txt');
+                }
+                return response.text();
+            })
+            .then(text => {
+                // Разбиваем по строкам, убираем пустые строки
+                const predictions = text.split('\n').filter(line => line.trim() !== '');
+                
+                if (predictions.length === 0) {
+                    document.getElementById('output').textContent = 'Нет предсказаний. Добавьте их в predictions.txt';
+                    return;
+                }
+
+                // Выбираем случайное предсказание
+                const randomIndex = Math.floor(Math.random() * predictions.length);
+                document.getElementById('output').textContent = predictions[randomIndex];
+            })
+            .catch(error => {
+                console.error('Ошибка:', error);
+                document.getElementById('output').textContent = 'Ошибка загрузки предсказаний. Проверьте файл predictions.txt';
+            });
+    </script>
+</body>
+</html>
